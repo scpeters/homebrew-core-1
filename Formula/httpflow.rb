@@ -13,6 +13,7 @@ class Httpflow < Formula
   end
 
   depends_on "pcre"
+  depends_on "libpcap" unless OS.mac?
 
   def install
     system "make"
