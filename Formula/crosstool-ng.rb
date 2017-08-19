@@ -29,6 +29,7 @@ class CrosstoolNg < Formula
   depends_on "make" => :optional
 
   unless OS.mac?
+    depends_on "ncurses"
     depends_on "bison" => :build
     depends_on "flex" => :build
     depends_on "gperf" => :build
