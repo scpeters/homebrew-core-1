@@ -13,10 +13,13 @@ class GetIplayer < Formula
     sha256 "fa56ddecbfe51c9763840b83b7dfa9a1138edb41baa21cf91aa28df955583818" => :el_capitan
   end
 
-  depends_on "atomicparsley"
-  depends_on "ffmpeg"
+  depends_on "atomicparsley" => :recommended
+  depends_on "ffmpeg" => :recommended
   depends_on :macos => :yosemite if OS.mac?
-  depends_on "libxml2" unless OS.mac?
+  unless OS.mac?
+    depends_on "libxml2"
+    depends_on "perl"
+  end
 
   resource "IO::Socket::IP" do
     url "https://cpan.metacpan.org/authors/id/P/PE/PEVANS/IO-Socket-IP-0.39.tar.gz"
@@ -39,6 +42,11 @@ class GetIplayer < Formula
   end
 
   unless OS.mac?
+    resource "Tiny" do
+      url "https://cpan.metacpan.org/authors/id/D/DM/DMUEY/IO-Interactive-Tiny-0.2.tar.gz"
+      sha256 "45c0696505c7e4347845f5cd2512b7b1bc78fbce4cbed2b58008283fc95ea5f9"
+    end
+
     resource "Try-Tiny" do
       url "https://cpan.metacpan.org/authors/id/E/ET/ETHER/Try-Tiny-0.30.tar.gz"
       sha256 "da5bd0d5c903519bbf10bb9ba0cb7bcac0563882bcfe4503aee3fb143eddef6b"
