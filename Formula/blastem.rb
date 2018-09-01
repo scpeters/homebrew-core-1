@@ -22,6 +22,10 @@ class Blastem < Formula
   depends_on "glew"
   depends_on "python@2"
   depends_on "sdl2"
+  unless OS.mac?
+    depends_on "gettext" => :build
+    depends_on "zlib"
+  end
 
   resource "Pillow" do
     url "https://files.pythonhosted.org/packages/8d/80/eca7a2d1a3c2dafb960f32f844d570de988e609f5fd17de92e1cf6a01b0a/Pillow-4.0.0.tar.gz"
@@ -41,15 +45,20 @@ class Blastem < Formula
   def install
     ENV.prepend_create_path "PYTHONPATH", buildpath/"vendor/lib/python2.7/site-packages"
 
-    if MacOS.sdk_path_if_needed
+    if OS.mac? && MacOS.sdk_path_if_needed
       ENV.append "CPPFLAGS", "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
       ENV.append "CPPFLAGS", "-I#{MacOS.sdk_path}/usr/include/ffi" # libffi
     end
 
     resource("Pillow").stage do
       inreplace "setup.py" do |s|
-        sdkprefix = MacOS.sdk_path_if_needed ? MacOS.sdk_path : ""
-        s.gsub! "ZLIB_ROOT = None", "ZLIB_ROOT = ('#{sdkprefix}/usr/lib', '#{sdkprefix}/usr/include')"
+        if OS.mac?
+          sdkprefix = MacOS.sdk_path_if_needed ? MacOS.sdk_path : ""
+          zlib_path = "('#{sdkprefix}/usr/lib', '#{sdkprefix}/usr/include')"
+        else
+          zlib_path = Formula["zlib"].opt_prefix
+        end
+        s.gsub! "ZLIB_ROOT = None", "ZLIB_ROOT = ('#{zlib_path}')"
         s.gsub! "JPEG_ROOT = None", "JPEG_ROOT = ('#{Formula["jpeg"].opt_prefix}/lib', '#{Formula["jpeg"].opt_prefix}/include')"
         s.gsub! "FREETYPE_ROOT = None", "FREETYPE_ROOT = ('#{Formula["freetype"].opt_prefix}/lib', '#{Formula["freetype"].opt_prefix}/include')"
       end
@@ -57,7 +66,9 @@ class Blastem < Formula
       begin
         # avoid triggering "helpful" distutils code that doesn't recognize Xcode 7 .tbd stubs
         saved_sdkroot = ENV.delete "SDKROOT"
-        ENV.append "CFLAGS", "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers" unless MacOS::CLT.installed?
+        if OS.mac?
+          ENV.append "CFLAGS", "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers" unless MacOS::CLT.installed?
+        end
         system "python", *Language::Python.setup_install_args(buildpath/"vendor")
       ensure
         ENV["SDKROOT"] = saved_sdkroot
