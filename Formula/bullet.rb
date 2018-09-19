@@ -22,6 +22,7 @@ class Bullet < Formula
   deprecated_option "double-precision" => "with-double-precision"
 
   depends_on "cmake" => :build
+  depends_on "gcc" => :test unless OS.mac?
 
   def install
     args = std_cmake_args + %W[
