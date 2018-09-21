@@ -23,6 +23,10 @@ class Rrdtool < Formula
   depends_on "glib"
   depends_on "pango"
   depends_on "lua" => :optional
+  unless OS.mac?
+    depends_on "groff"
+    depends_on "libxml2"
+  end
 
   # Ha-ha, but sleeping is annoying when running configure a lot
   patch :DATA
@@ -44,7 +48,7 @@ class Rrdtool < Formula
     system "./configure", *args
 
     # Needed to build proper Ruby bundle
-    ENV["ARCHFLAGS"] = "-arch #{MacOS.preferred_arch}"
+    ENV["ARCHFLAGS"] = "-arch #{MacOS.preferred_arch}" if OS.mac?
 
     system "make", "CC=#{ENV.cc}", "CXX=#{ENV.cxx}", "install"
     prefix.install "bindings/ruby/test.rb"
