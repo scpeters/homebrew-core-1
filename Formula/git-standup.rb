@@ -1,3 +1,4 @@
+# git-standup: Build a bottle for Linuxbrew
 class GitStandup < Formula
   desc "Git extension to generate reports for standup meetings"
   homepage "https://github.com/kamranahmedse/git-standup"
