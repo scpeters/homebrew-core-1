@@ -1,3 +1,4 @@
+# libpst: Build a bottle for Linuxbrew
 class Libpst < Formula
   desc "Utilities for the PST file format"
   homepage "http://www.five-ten-sg.com/libpst/"
