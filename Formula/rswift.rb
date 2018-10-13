@@ -8,7 +8,7 @@ class Rswift < Formula
     url "https://github.com/mac-cain13/R.swift.git",
         :tag => "v4.0.0",
         :revision => "0306ec185ad0f7753e9ea44fefdbf268d9e62184"
-    depends_on :xcode => "9.0"
+    depends_on :xcode => "9.0" if OS.mac?
     patch do
       url "https://github.com/mac-cain13/R.swift/commit/082adb3a4fb3835507e61de15dabd2e9e1b547fb.diff?full_index=1"
       sha256 "6ebaeaeb0ad29ad94f1919683cc064455837a9d0e7b2cad83bc9011d60e6cf2f"
