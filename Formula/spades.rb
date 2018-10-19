@@ -15,6 +15,7 @@ class Spades < Formula
 
   depends_on "cmake" => :build
   depends_on "gcc"
+  depends_on "bzip2" unless OS.mac?
 
   fails_with :clang # no OpenMP support
 
