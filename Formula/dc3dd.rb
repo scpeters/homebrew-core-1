@@ -1,3 +1,4 @@
+# dc3dd: Build a bottle for Linuxbrew
 class Dc3dd < Formula
   desc "Patched GNU dd that is intended for forensic acquisition of data"
   homepage "https://sourceforge.net/projects/dc3dd/"
