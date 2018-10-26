@@ -78,15 +78,21 @@ class Bullet < Formula
       }
     EOS
 
+    cxx_lib = if OS.mac?
+      "-lc++"
+    else
+      "-lstdc++"
+    end
+
     if build.with? "framework"
       system ENV.cc, "test.cpp", "-F#{frameworks}", "-framework", "LinearMath",
-                     "-I#{frameworks}/LinearMath.framework/Headers", "-lc++",
+                     "-I#{frameworks}/LinearMath.framework/Headers", cxx_lib,
                      "-o", "f_test"
       system "./f_test"
     end
 
     system ENV.cc, "test.cpp", "-I#{include}/bullet", "-L#{lib}",
-                   "-lLinearMath", "-lc++", "-o", "test"
+                   "-lLinearMath", cxx_lib, "-o", "test"
     system "./test"
   end
 end
